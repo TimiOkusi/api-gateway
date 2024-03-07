@@ -1,0 +1,126 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+log:
+  level: debug
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/ip'
+  seismicData:
+    host: 'localhost'
+    paths: '/seismic/*'
+  daylightData:
+    host: 'localhost'
+    paths: '/daylight/*'
+  issLocationData:
+    host: 'localhost'
+    paths: '/iss-now'
+  spaceData:
+    host: 'localhost'
+    paths: '/astros'
+  weatherData:
+    host: 'localhost'
+    paths: '/weather/*'
+  forecastData:
+    host: 'localhost'
+    paths: '/weather/*/forecast'
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+  seismic:
+    url: 'https://65ca483b3b05d29307e01640.mockapi.io/api'
+  daylight:
+    url: 'https://65ca483b3b05d29307e01640.mockapi.io/api'
+  space:
+    url: 'http://api.open-notify.org'
+  weather:
+    url: 'https://crispy-system-q77q6grv49gv39q44-3000.app.github.dev/api'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin
+              changeOrigin: true
+  seismic:
+    apiEndpoints:
+      - seismicData
+    policies:
+      - log:
+          action:
+            message: '${req.method} ${req.originalUrl}'
+      - proxy:
+          - action:
+              serviceEndpoint: seismic
+              changeOrigin: true
+  daylight:
+    apiEndpoints:
+      - daylightData
+    policies:
+      - log:
+          action:
+            message: '${req.method} ${req.originalUrl}'
+      - proxy:
+          - action:
+              serviceEndpoint: daylight
+              changeOrigin: true
+  issLocation:
+    apiEndpoints:
+      - issLocationData
+    policies:
+      - log:
+          action:
+            message: '${req.method} ${req.originalUrl}'
+      - proxy:
+          - action:
+              serviceEndpoint: space
+              changeOrigin: true
+  space:
+    apiEndpoints:
+      - spaceData
+    policies:
+      - log:
+          action:
+            message: '${req.method} ${req.originalUrl}'
+      - proxy:
+          - action:
+              serviceEndpoint: space
+              changeOrigin: true
+  weather:
+    apiEndpoints:
+      - weatherData
+    policies:
+      - log:
+          action:
+            message: '${req.method} ${req.originalUrl}'
+      - proxy:
+          - action:
+              serviceEndpoint: weather
+              changeOrigin: true
+  forecast:
+    apiEndpoints:
+      - forecastData
+    policies:
+      - log:
+          action:
+            message: '${req.method} ${req.originalUrl}'
+      - proxy:
+          - action:
+              serviceEndpoint: weather
+              changeOrigin: true
