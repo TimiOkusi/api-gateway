@@ -37,7 +37,7 @@ serviceEndpoints:
   space:
     url: 'http://api.open-notify.org'
   weather:
-    url: 'https://crispy-system-q77q6grv49gv39q44-3000.app.github.dev/api'
+    url: 'https://didactic-journey-wrr7xj6v55rqc9r74-3000.app.github.dev/api'
 policies:
   - basic-auth
   - cors
